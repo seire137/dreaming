@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Player Blog</title>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
@@ -10,7 +11,10 @@
     <style>
         body {
             margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden; font-family: 'Arial', sans-serif; color: white;
+            height: 100vh; 
+            overflow: hidden; /* 전체 스크롤 방지 */
+            overflow-x: hidden; /* 가로 여백이 잘리도록 설정 */
+            font-family: 'Arial', sans-serif; color: white;
             background-color: #4a4a4a; transition: background 0.5s ease;
         }
 
@@ -20,15 +24,18 @@
             filter: blur(50px) brightness(0.6); transform: scale(1.2); transition: background-image 0.5s ease;
         }
 
-        /* 2. 큰 네모 스타일: #D4D4D9 컬러, 투명도 65%, 테두리는 불투명 */
+        /* 큰 네모 스타일 */
         .player-card {
-            width: 380px; padding: 30px; text-align: center;
-            background: rgba(212, 212, 217, 0.65); /* #D4D4D9를 RGBA로 변환 */
-            backdrop-filter: blur(15px); /* 배경을 흐릿하게 하여 가독성 높임 */
+            width: 380px; 
+            flex-shrink: 0; /* 중요: 화면이 작아져도 카드가 작아지지 않게 고정합니다 */
+            padding: 30px; text-align: center;
+            background: rgba(212, 212, 217, 0.65);
+            backdrop-filter: blur(15px);
             border-radius: 30px; 
-            border: 2px solid #D4D4D9; /* 테두리는 투명도 없이 선명하게 */
+            border: 2px solid #D4D4D9;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             box-sizing: border-box;
+            position: relative;
         }
 
         .album-art {
@@ -37,7 +44,6 @@
             margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* 텍스트 가독성을 위해 어두운 색상 추가 */
         .song-name { font-size: 1.6rem; font-weight: bold; margin: 10px 0; color: #333; }
         .pair-name { font-size: 1rem; color: #555; margin-bottom: 25px; }
 
@@ -46,7 +52,6 @@
 
         .controls { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
-        /* 버튼 컬러를 가독성을 위해 어둡게 변경 */
         .btn { 
             background: none; border: none; color: #333; 
             font-size: 1.4rem; cursor: pointer; opacity: 0.8; 
@@ -97,10 +102,7 @@
 
     function updatePlayer() {
         if (posts.length === 0) return;
-        
         const post = posts[currentIndex];
-        
-        // 3. Category 대신 다시 tags를 사용합니다.
         document.getElementById('songName').innerText = post.title || "제목 없음";
         document.getElementById('pairName').innerText = post.tags || "태그 없음";
         
