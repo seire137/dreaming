@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>My Player Blog</title>
-    <link href="/your-path-to-uicons/css/uicons-rounded-regular.css" rel="stylesheet">
-    <link href="/your-path-to-uicons/css/uicons-rounded-bold.css" rel="stylesheet">
-    <link href="/your-path-to-uicons/css/uicons-rounded-solid.css" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
 
     <style>
         body {
@@ -40,17 +39,9 @@
         .progress-current { width: 45%; height: 100%; background: white; border-radius: 2px; }
 
         .controls { display: flex; justify-content: space-between; align-items: center; }
-        
-        /* 아이콘 버튼 스타일 */
-        .btn { 
-            background: none; border: none; color: white; 
-            font-size: 1.5rem; cursor: pointer; opacity: 0.8; 
-            display: flex; align-items: center; justify-content: center;
-        }
+        .btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; opacity: 0.8; display: flex; align-items: center; justify-content: center; }
         .btn:hover { opacity: 1; transform: scale(1.1); }
-        .btn-play { font-size: 3rem; } /* 재생 버튼 크기 조정 */
-        
-        /* 아이콘 수직 정렬을 위한 설정 */
+        .btn-play { font-size: 3rem; }
         .btn i { display: flex; }
     </style>
 </head>
@@ -60,45 +51,76 @@
 
 <div class="player-card">
     <div id="albumArt" class="album-art"></div>
-    <div id="songName" class="song-name">게시글 제목</div>
-    <div id="pairName" class="pair-name">#태그 #정보</div>
+    <div id="songName" class="song-name">로딩 중...</div>
+    <div id="pairName" class="pair-name">데이터를 불러오고 있습니다.</div>
     
     <div class="progress-bar"><div class="progress-current"></div></div>
 
     <div class="controls">
-        <button class="btn" onclick="openMenu()"><i class="fi fi-br-list"></i></button> <button class="btn" onclick="prevPost()"><i class="fi fi-sr-rewind"></i></button> <button class="btn btn-play" onclick="enterPost()"><i class="fi fi-sr-play"></i></button> <button class="btn" onclick="nextPost()"><i class="fi fi-sr-forward"></i></button> <button class="btn" onclick="toggleShuffle()"><i class="fi fi-br-shuffle"></i></button> </div>
+        <button class="btn" onclick="openMenu()"><i class="fi fi-br-list"></i></button> 
+        <button class="btn" onclick="prevPost()"><i class="fi fi-sr-rewind"></i></button> 
+        <button class="btn btn-play" onclick="enterPost()"><i class="fi fi-sr-play"></i></button> 
+        <button class="btn" onclick="nextPost()"><i class="fi fi-sr-forward"></i></button> 
+        <button class="btn" onclick="toggleShuffle()"><i class="fi fi-br-shuffle"></i></button> 
+    </div>
 </div>
 
 <script>
-    // 이 데이터 부분은 나중에 구글 시트 웹 앱 URL로 연결하면 됩니다.
-    let posts = [
-// 시트 데이터 불러오기
-fetch('https://script.google.com/macros/s/AKfycby6wtp_vKh5ie5SBSHY5x0LwlMWkPjeTbed5vy8UZUGXlrNmEzaWb483F-vh12LBJS3/exec')
-  .then(response => response.json())
-  .then(data => {
-    posts = data; // 불러온 데이터를 리스트에 할당
-    updatePlayer(); // 화면 업데이트
-  });
-    ];
-
+    let posts = []; // 데이터를 담을 빈 리스트입니다.
     let currentIndex = 0;
 
+    // 구글 시트 웹 앱 URL을 여기에 넣으세요!
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycby6wtp_vKh5ie5SBSHY5x0LwlMWkPjeTbed5vy8UZUGXlrNmEzaWb483F-vh12LBJS3/exec';
+
+    // 1. 데이터 불러오기 함수
+    function loadData() {
+        if(SHEET_URL === '여기에_구글_웹_앱_URL을_넣으세요') {
+            alert('구글 시트 URL을 먼저 넣어주세요!');
+            return;
+        }
+
+        fetch(SHEET_URL)
+            .then(response => response.json())
+            .then(data => {
+                posts = data; // 불러온 데이터를 리스트에 할당합니다.
+                updatePlayer(); // 화면을 업데이트합니다.
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // 2. 화면 업데이트 함수
     function updatePlayer() {
+        if (posts.length === 0) return;
+        
         const post = posts[currentIndex];
         document.getElementById('songName').innerText = post.title;
         document.getElementById('pairName').innerText = post.tags;
+        
         const imgUrl = `url('${post.img}')`;
         document.getElementById('albumArt').style.backgroundImage = imgUrl;
         document.getElementById('bgWrapper').style.backgroundImage = imgUrl;
     }
 
-    function nextPost() { currentIndex = (currentIndex + 1) % posts.length; updatePlayer(); }
-    function prevPost() { currentIndex = (currentIndex - 1 + posts.length) % posts.length; updatePlayer(); }
-    function enterPost() { window.location.href = posts[currentIndex].url; }
-    function openMenu() { alert("게시글 목록 메뉴를 준비 중입니다."); }
+    // 3. 버튼 기능들 (파이썬의 인덱스 연산과 비슷합니다)
+    function nextPost() { 
+        if (posts.length === 0) return;
+        currentIndex = (currentIndex + 1) % posts.length; 
+        updatePlayer(); 
+    }
+    function prevPost() { 
+        if (posts.length === 0) return;
+        currentIndex = (currentIndex - 1 + posts.length) % posts.length; 
+        updatePlayer(); 
+    }
+    function enterPost() { 
+        if (posts.length === 0) return;
+        window.location.href = posts[currentIndex].url; 
+    }
+    function openMenu() { alert("게시글 목록을 준비 중입니다."); }
     function toggleShuffle() { alert("셔플 기능을 켭니다."); }
 
-    updatePlayer();
+    // 사이트 접속 시 실행
+    loadData();
 </script>
 
 </body>
