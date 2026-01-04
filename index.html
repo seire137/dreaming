@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>My Player Blog</title>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+
     <style>
         body {
             margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
@@ -18,10 +20,13 @@
             filter: blur(50px) brightness(0.6); transform: scale(1.2); transition: background-image 0.5s ease;
         }
 
+        /* 2. 큰 네모 스타일: #D4D4D9 컬러, 투명도 65%, 테두리는 불투명 */
         .player-card {
             width: 380px; padding: 30px; text-align: center;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-            border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(212, 212, 217, 0.65); /* #D4D4D9를 RGBA로 변환 */
+            backdrop-filter: blur(15px); /* 배경을 흐릿하게 하여 가독성 높임 */
+            border-radius: 30px; 
+            border: 2px solid #D4D4D9; /* 테두리는 투명도 없이 선명하게 */
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             box-sizing: border-box;
         }
@@ -29,25 +34,21 @@
         .album-art {
             width: 100%; aspect-ratio: 1 / 1; background-color: #666;
             border-radius: 20px; background-size: cover; background-position: center;
-            margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .song-name { font-size: 1.6rem; font-weight: bold; margin: 10px 0; }
-        .pair-name { font-size: 1rem; color: rgba(255,255,255,0.7); margin-bottom: 25px; }
+        /* 텍스트 가독성을 위해 어두운 색상 추가 */
+        .song-name { font-size: 1.6rem; font-weight: bold; margin: 10px 0; color: #333; }
+        .pair-name { font-size: 1rem; color: #555; margin-bottom: 25px; }
 
-        .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-bottom: 30px; }
-        .progress-current { width: 45%; height: 100%; background: white; border-radius: 2px; }
+        .progress-bar { width: 100%; height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; margin-bottom: 30px; }
+        .progress-current { width: 45%; height: 100%; background: #333; border-radius: 2px; }
 
-        /* 아이콘 레이아웃 최적화 */
-        .controls { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            width: 100%;
-        }
+        .controls { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
+        /* 버튼 컬러를 가독성을 위해 어둡게 변경 */
         .btn { 
-            background: none; border: none; color: white; 
+            background: none; border: none; color: #333; 
             font-size: 1.4rem; cursor: pointer; opacity: 0.8; 
             width: 45px; height: 45px;
             display: flex; align-items: center; justify-content: center; 
@@ -65,7 +66,7 @@
 <div class="player-card">
     <div id="albumArt" class="album-art"></div>
     <div id="songName" class="song-name">로딩 중...</div>
-    <div id="pairName" class="pair-name">데이터를 불러오고 있습니다.</div>
+    <div id="pairName" class="pair-name">데이터 로드 중</div>
     
     <div class="progress-bar"><div class="progress-current"></div></div>
 
@@ -99,7 +100,7 @@
         
         const post = posts[currentIndex];
         
-        // 2. Category를 다시 tags로 변경하였습니다
+        // 3. Category 대신 다시 tags를 사용합니다.
         document.getElementById('songName').innerText = post.title || "제목 없음";
         document.getElementById('pairName').innerText = post.tags || "태그 없음";
         
@@ -113,8 +114,8 @@
     function nextPost() { if (posts.length > 0) { currentIndex = (currentIndex + 1) % posts.length; updatePlayer(); } }
     function prevPost() { if (posts.length > 0) { currentIndex = (currentIndex - 1 + posts.length) % posts.length; updatePlayer(); } }
     function enterPost() { if (posts.length > 0) window.location.href = posts[currentIndex].url; }
-    function openMenu() { alert("게시글 목록을 준비 중입니다."); }
-    function toggleShuffle() { alert("셔플 기능을 켭니다."); }
+    function openMenu() { alert("목록 메뉴"); }
+    function toggleShuffle() { alert("셔플 모드"); }
 
     loadData();
 </script>
