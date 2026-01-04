@@ -3,97 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <title>My Player Blog</title>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+
     <style>
-        /* CSS: 디자인을 담당합니다 */
         body {
-            background-color: #2c2c2c;
-            color: white;
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden; font-family: 'Arial', sans-serif; color: white;
+            background-color: #4a4a4a; transition: background 0.5s ease;
+        }
+
+        #bgWrapper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-size: cover; background-position: center;
+            filter: blur(50px) brightness(0.6); transform: scale(1.2); transition: background-image 0.5s ease;
         }
 
         .player-card {
-            width: 350px;
-            padding: 20px;
-            text-align: center;
+            width: 350px; padding: 30px; text-align: center;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+            border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
 
-        /* 앨범 화면 (게시글 미리보기 이미지) */
         .album-art {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            background-color: #444;
-            border-radius: 20px;
-            background-size: cover;
-            background-position: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-bottom: 30px;
+            width: 100%; aspect-ratio: 1 / 1; background-color: #666;
+            border-radius: 20px; background-size: cover; background-position: center;
+            margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* 게시글 정보 */
-        .song-name { font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
-        .pair-name { font-size: 1rem; color: #aaa; margin-bottom: 20px; }
+        .song-name { font-size: 1.6rem; font-weight: bold; margin: 10px 0; }
+        .pair-name { font-size: 1rem; color: rgba(255,255,255,0.7); margin-bottom: 25px; }
 
-        /* 프로그레스 바 (장식용) */
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: #555;
-            border-radius: 2px;
-            margin-bottom: 30px;
-            position: relative;
-        }
-        .progress-current {
-            width: 40%;
-            height: 100%;
-            background: white;
-            border-radius: 2px;
-        }
+        .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-bottom: 30px; }
+        .progress-current { width: 45%; height: 100%; background: white; border-radius: 2px; }
 
-        /* 컨트롤 버튼 배치 */
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .controls { display: flex; justify-content: space-between; align-items: center; }
+        
+        /* 아이콘 버튼 스타일 */
+        .btn { 
+            background: none; border: none; color: white; 
+            font-size: 1.5rem; cursor: pointer; opacity: 0.8; 
+            display: flex; align-items: center; justify-content: center;
         }
-
-        .btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .btn:hover { transform: scale(1.1); }
-        .btn-play { font-size: 3rem; } /* 재생 버튼은 더 크게 */
+        .btn:hover { opacity: 1; transform: scale(1.1); }
+        .btn-play { font-size: 3rem; } /* 재생 버튼 크기 조정 */
+        
+        /* 아이콘 수직 정렬을 위한 설정 */
+        .btn i { display: flex; }
     </style>
 </head>
 <body>
 
+<div id="bgWrapper"></div>
+
 <div class="player-card">
     <div id="albumArt" class="album-art"></div>
-
     <div id="songName" class="song-name">게시글 제목</div>
     <div id="pairName" class="pair-name">#태그 #정보</div>
-
-    <div class="progress-bar">
-        <div class="progress-current"></div>
-    </div>
+    
+    <div class="progress-bar"><div class="progress-current"></div></div>
 
     <div class="controls">
-        <button class="btn" onclick="openMenu()">☰</button> <button class="btn" onclick="prevPost()">⏮</button> <button class="btn btn-play" onclick="enterPost()">▶</button> <button class="btn" onclick="nextPost()">⏭</button> <button class="btn" onclick="toggleShuffle()">🔀</button> </div>
+        <button class="btn" onclick="openMenu()"><i class="fi fi-br-list"></i></button> <button class="btn" onclick="prevPost()"><i class="fi fi-sr-rewind"></i></button> <button class="btn btn-play" onclick="enterPost()"><i class="fi fi-sr-play"></i></button> <button class="btn" onclick="nextPost()"><i class="fi fi-sr-forward"></i></button> <button class="btn" onclick="toggleShuffle()"><i class="fi fi-br-shuffle"></i></button> </div>
 </div>
 
 <script>
-    /* JS: 동작을 담당합니다 (파이썬의 리스트 개념 활용) */
-
-    // 1. 데이터베이스 (나중에 구글 시트와 연결될 부분입니다)
-    const posts = [
+    // 이 데이터 부분은 나중에 구글 시트 웹 앱 URL로 연결하면 됩니다.
+    let posts = [
 // 시트 데이터 불러오기
 fetch('https://script.google.com/macros/s/AKfycby6wtp_vKh5ie5SBSHY5x0LwlMWkPjeTbed5vy8UZUGXlrNmEzaWb483F-vh12LBJS3/exec')
   .then(response => response.json())
@@ -103,38 +80,23 @@ fetch('https://script.google.com/macros/s/AKfycby6wtp_vKh5ie5SBSHY5x0LwlMWkPjeTb
   });
     ];
 
-    let currentIndex = 0; // 현재 보고 있는 게시글 번호
+    let currentIndex = 0;
 
-    // 2. 화면을 업데이트하는 함수
     function updatePlayer() {
         const post = posts[currentIndex];
         document.getElementById('songName').innerText = post.title;
         document.getElementById('pairName').innerText = post.tags;
-        document.getElementById('albumArt').style.backgroundImage = `url('${post.img}')`;
+        const imgUrl = `url('${post.img}')`;
+        document.getElementById('albumArt').style.backgroundImage = imgUrl;
+        document.getElementById('bgWrapper').style.backgroundImage = imgUrl;
     }
 
-    // 3. 버튼 기능들
-    function nextPost() {
-        currentIndex = (currentIndex + 1) % posts.length; // 리스트 끝으로 가면 다시 처음으로
-        updatePlayer();
-    }
+    function nextPost() { currentIndex = (currentIndex + 1) % posts.length; updatePlayer(); }
+    function prevPost() { currentIndex = (currentIndex - 1 + posts.length) % posts.length; updatePlayer(); }
+    function enterPost() { window.location.href = posts[currentIndex].url; }
+    function openMenu() { alert("게시글 목록 메뉴를 준비 중입니다."); }
+    function toggleShuffle() { alert("셔플 기능을 켭니다."); }
 
-    function prevPost() {
-        currentIndex = (currentIndex - 1 + posts.length) % posts.length;
-        updatePlayer();
-    }
-
-    function enterPost() {
-        const url = posts[currentIndex].url;
-        alert(url + " 페이지로 이동합니다!"); 
-        // window.location.href = url; // 실제 페이지 이동 시 사용
-    }
-
-    function openMenu() {
-        alert("메뉴 목록을 엽니다.");
-    }
-
-    // 초기 화면 실행
     updatePlayer();
 </script>
 
