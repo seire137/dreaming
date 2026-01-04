@@ -2,37 +2,47 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>My Player Blog</title>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
 
     <style>
+        /* 전체 페이지 설정 */
         body {
-            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
-            height: 100vh; 
-            overflow: hidden; /* 전체 스크롤 방지 */
-            overflow-x: hidden; /* 가로 여백이 잘리도록 설정 */
+            margin: 0; 
+            padding: 30px; /* 핵심: 화면 테두리에 30px의 안전 여백을 줍니다 */
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh; /* 최소 높이를 화면 전체로 잡되, 내용이 많으면 늘어남 */
+            box-sizing: border-box; /* 패딩이 전체 크기에 포함되도록 설정 */
             font-family: 'Arial', sans-serif; color: white;
             background-color: #4a4a4a; transition: background 0.5s ease;
+            /* overflow: hidden; 제거 -> 그림자가 잘리는 주원인이었습니다 */
         }
 
+        /* 배경 흐림 효과 레이어 */
         #bgWrapper {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
             background-size: cover; background-position: center;
-            filter: blur(50px) brightness(0.6); transform: scale(1.2); transition: background-image 0.5s ease;
+            /* 테두리 부근의 흐림 효과가 어색하지 않게 스케일을 조금 더 키웁니다 */
+            filter: blur(60px) brightness(0.6); transform: scale(1.3); transition: background-image 0.5s ease;
         }
 
-        /* 큰 네모 스타일 */
+        /* 플레이어 카드 메인 스타일 */
         .player-card {
-            width: 380px; 
-            flex-shrink: 0; /* 중요: 화면이 작아져도 카드가 작아지지 않게 고정합니다 */
+            /* 핵심: 너비를 유연하게 변경 */
+            width: 100%; /* 기본적으로 주어진 공간(body 패딩 안쪽)을 꽉 채움 */
+            max-width: 380px; /* 하지만 380px보다는 커지지 않음 (PC 화면 고려) */
+            
             padding: 30px; text-align: center;
             background: rgba(212, 212, 217, 0.65);
             backdrop-filter: blur(15px);
             border-radius: 30px; 
             border: 2px solid #D4D4D9;
+            /* 그림자가 퍼지는 정도(50px)를 고려해 body 패딩을 설정했습니다 */
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             box-sizing: border-box;
             position: relative;
@@ -44,8 +54,8 @@
             margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .song-name { font-size: 1.6rem; font-weight: bold; margin: 10px 0; color: #333; }
-        .pair-name { font-size: 1rem; color: #555; margin-bottom: 25px; }
+        .song-name { font-size: 1.6rem; font-weight: bold; margin: 10px 0; color: #333; word-break: keep-all; }
+        .pair-name { font-size: 1rem; color: #555; margin-bottom: 25px; word-break: keep-all; }
 
         .progress-bar { width: 100%; height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; margin-bottom: 30px; }
         .progress-current { width: 45%; height: 100%; background: #333; border-radius: 2px; }
@@ -85,6 +95,7 @@
 </div>
 
 <script>
+    // 스크립트 부분도 기존과 동일합니다
     let posts = [];
     let currentIndex = 0;
 
