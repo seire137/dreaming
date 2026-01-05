@@ -3,69 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>성윤</title>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <title id="pageTitle">게시글 로딩 중...</title>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 
     <style>
         body {
-            margin: 0; padding: 0; font-family: 'Arial', sans-serif; color: #333; background-color: white;
+            margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            color: #333; background-color: #f9f9f9; display: flex; justify-content: center; min-height: 100vh;
         }
-        /* 상단 내비게이션 바 */
-        .top-nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background: white;
-            position: sticky; top: 0; z-index: 10; /* 상단 고정 */
+        .container {
+            width: 100%; max-width: 600px; margin: 20px; background: white; padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; box-sizing: border-box;
         }
-        .nav-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #333; padding: 5px; }
-        .nav-right { display: flex; gap: 15px; }
-        
-        /* 하트 아이콘 스타일 */
-        .heart-btn i { transition: color 0.2s, transform 0.2s; }
-        .heart-btn.active i { color: red; /* 활성화되면 빨간색 */ }
-        .heart-btn:active i { transform: scale(1.2); /* 클릭 시 살짝 커짐 */ }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; }
+        .nav-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: #333; padding: 5px; display: flex; align-items: center; }
+        .nav-right { display: flex; gap: 15px; align-items: center; }
+        .heart-btn.active i {
+    color: #cc2923;
+    /* 버튼 주위 은은한 붉은 광채 */
+    text-shadow: 0 0 10px rgba(204, 41, 35, 0.5);
+}
 
-        /* 메인 콘텐츠 컨테이너 */
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-
-        /* 제목 */
-        .post-title { font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; }
-        .post-meta { color: #777; font-size: 0.9rem; margin-bottom: 20px; }
-
-        /* 메인 이미지 영역 */
+        .post-title { font-size: 1.8rem; font-weight: 800; margin: 0 0 10px 0; word-break: keep-all; }
+        .post-meta { color: #888; font-size: 0.95rem; margin-bottom: 25px; }
         .post-image {
-            width: 100%; aspect-ratio: 1 / 1; /* 정사각형 유지 */
-            background-color: #eee; border-radius: 15px;
-            background-size: cover; background-position: center;
-            /* 여기에 게시글 이미지 주소를 넣으세요 */
-            background-image: url('https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FQN1aR%2FbtsMTEhu3wt%2FAAAAAAAAAAAAAAAAAAAAANtVnWjs9c6znns4nus_GUR6TcrTs4fA7qTxf2nWpSUL%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1769871599%26allow_ip%3D%26allow_referer%3D%26signature%3DgFYVkl2aO%252BjeMBTZHl%252F1erAscB4%253D'); 
-            margin-bottom: 30px;
+            width: 100%; aspect-ratio: 1 / 1; background-color: #eee; border-radius: 15px;
+            background-size: cover; background-position: center; margin-bottom: 30px;
         }
-
-        /* 회색 구분선 */
-        .divider { height: 1px; background-color: #ddd; border: none; margin: 30px 0; }
-
-        /* 게시글 본문 */
-        .post-content { font-size: 1rem; line-height: 1.6; color: #444; white-space: pre-wrap; /* 줄바꿈 유지 */ }
+        .divider { height: 1px; background-color: #eee; border: none; margin: 30px 0; }
+        .post-content { font-size: 1.05rem; line-height: 1.7; color: #444; white-space: pre-wrap; word-break: break-all; }
     </style>
 </head>
-<body>
-
-<div class="top-nav">
-    <button class="nav-btn" onclick="history.back()"><i class="fi fi-rr-angle-left"></i></button>
-    <div class="nav-right">
-        <button class="nav-btn heart-btn" onclick="toggleHeart(this)">
-            <i class="fi fi-rr-heart"></i>
-        </button>
-        <button class="nav-btn"><i class="fi fi-rr-menu-dots-vertical"></i></button>
-    </div>
-</div>
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
 
 <div class="container">
-    <div class="post-title">여기에 게시글 제목을 적으세요</div>
-    <div class="post-meta">작성자 | 날짜</div>
+    <div class="top-nav">
+        <button class="nav-btn" onclick="history.back()"><i class="fi fi-rr-angle-left"></i></button>
+        <div class="nav-right">
+            <button class="nav-btn heart-btn" onclick="toggleHeart(this)"><i class="fi fi-rr-heart"></i></button>
+            <button class="nav-btn"><i class="fi fi-rr-menu-dots-vertical"></i></button>
+        </div>
+    </div>
 
-    <div class="post-image"></div>
+    <div id="displayTitle" class="post-title">데이터를 불러오는 중...</div>
+    <div id="displayTags" class="post-meta">로딩 중 | 2026.01.05</div>
+
+    <div id="displayImage" class="post-image"></div>
 
     <hr class="divider">
 
@@ -76,18 +62,41 @@
 </div>
 
 <script>
-    // 하트 토글 기능
-    function toggleHeart(btn) {
-        btn.classList.toggle('active'); // 버튼에 'active' 클래스를 넣었다 뺐다 함
-        const icon = btn.querySelector('i');
-        if (btn.classList.contains('active')) {
-            // 활성화되면 꽉 찬 하트로 변경
-            icon.className = 'fi fi-sr-heart'; 
-        } else {
-            // 비활성화되면 빈 하트로 변경
-            icon.className = 'fi fi-rr-heart'; 
-        }
+    // 2. 구글 앱스 스크립트 URL을 입력하세요
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycby6wtp_vKh5ie5SBSHY5x0LwlMWkPjeTbed5vy8UZUGXlrNmEzaWb483F-vh12LBJS3/exec';
+
+    function loadPostData() {
+        fetch(SHEET_URL)
+            .then(response => response.json())
+            .then(data => {
+                // 현재 페이지의 파일명을 가져옵니다 (예: post1.html)
+                const currentFileName = window.location.pathname.split('/').pop();
+                
+                // 시트 데이터(url 열)에서 현재 파일명과 일치하는 행을 찾습니다
+                const currentPost = data.find(post => post.url.includes(currentFileName));
+
+                if (currentPost) {
+                    // 데이터 반영
+                    document.title = currentPost.title; // 브라우저 탭 제목
+                    document.getElementById('displayTitle').innerText = currentPost.title; // 제목
+                    document.getElementById('displayTags').innerText = currentPost.tags + " | " + new Date().toLocaleDateString(); // 태그
+                    
+                    if (currentPost.img) {
+                        document.getElementById('displayImage').style.backgroundImage = `url('${https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FQN1aR%2FbtsMTEhu3wt%2FAAAAAAAAAAAAAAAAAAAAANtVnWjs9c6znns4nus_GUR6TcrTs4fA7qTxf2nWpSUL%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1769871599%26allow_ip%3D%26allow_referer%3D%26signature%3DgFYVkl2aO%252BjeMBTZHl%252F1erAscB4%253D}')`;
+                    }
+                }
+            })
+            .catch(error => console.error('데이터 로드 실패:', error));
     }
+
+    function toggleHeart(btn) {
+        btn.classList.toggle('active');
+        const icon = btn.querySelector('i');
+        icon.className = btn.classList.contains('active') ? 'fi fi-ss-heart' : 'fi fi-rr-heart';
+    }
+
+    // 페이지 로드 시 실행
+    loadPostData();
 </script>
 
 </body>
